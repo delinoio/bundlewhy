@@ -212,3 +212,6 @@ tmp/
 # Repository development environment (always local and never committed)
 /.infisical.json
 /.dev-environment/
+
+# Rspress generated documentation
+/apps/public-docs/doc_build/

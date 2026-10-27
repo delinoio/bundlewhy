@@ -2,7 +2,7 @@
 
 ## Scope
 
-The base repository contains shared instructions, skills, documentation templates and formatting infrastructure. It has no runtime projects, native build workspace, generated protocol bindings, deployment targets or release credentials.
+This repository owns bundlewhy. See [project ownership](project-bundlewhy.md) and [the public-guide contract](apps-bundlewhy-docs-foundation.md). The transferred runtime, adapters, UI, fixtures, schemas and generated bindings retain their directory layout. Public hosting and release publication are not configured.
 
 ## Installation
 
@@ -18,13 +18,13 @@ CI requires an explicit comparison and rejects local `--staged` and `--all` mode
 
 ## Validation
 
-Run `pnpm test` for formatter and hook fixtures. CI runs these fixtures and `pnpm format:check --base <sha> --head <sha>` on Ubuntu for pull requests, main pushes and manual dispatch. PR comparisons use the pull request base and head. Push comparisons use the prior and current commits. Manual comparisons use the merge base with `origin/main`; an optional `base` input selects another existing revision. A root push has no previous commit, so CI creates a local empty-tree comparison commit without pushing it. No full manual mode or macOS runners are configured.
+Run `pnpm test:tooling` for formatter and hook fixtures. CI runs these fixtures and `pnpm format:check --base <sha> --head <sha>` on Ubuntu for pull requests, main pushes and manual dispatch. PR comparisons use the pull request base and head. Push comparisons use the prior and current commits. Manual comparisons use the merge base with `origin/main`; an optional `base` input selects another existing revision. A root push has no previous commit, so CI creates a local empty-tree comparison commit without pushing it. No full manual mode or macOS runners are configured.
 
-Each CI run records the validation revision, comparison revisions, commands and results in its logs and job summary. Runtime and platform acceptance must be added with the owning project. Passing shared fixtures does not establish runtime or release acceptance.
+Each CI run records the validation revision, comparison revisions, commands and results in its logs and job summary. Affected runtime checks use the same exact comparison for project paths and shared manifests, scripts and workflow configuration. CI runs schema lint/format/breaking/generation freshness, Go binding tests, UI/adapter/launcher/guide tests, Rust formatting/tests/Clippy and real Vite/Rspack fixture acceptance on Ubuntu. `cargo test` at the repository root covers the single Rust workspace member. Build the UI before distributing a Rust binary; release-profile builds require it. Fixture acceptance removes generated UI output. These checks do not establish cross-platform native or release acceptance.
 
 ## Assets and licensing
 
-Every repository-owned `dist` directory is ignored generated output and must be removed after validation. Assets at least 512 KiB require exact-path Git LFS attributes and hydration before use. There are no LFS assets in this base.
+Every repository-owned `dist` directory is ignored generated output and must be removed after validation. Assets at least 512 KiB require exact-path Git LFS attributes and hydration before use. The transferred bundlewhy sources and fixtures include no LFS assets.
 
 ## Dependency updates
 
