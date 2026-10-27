@@ -60,6 +60,9 @@
 - `scripts/`: Shared development, CI, installation and release tooling.
 - `.github/`: GitHub workflows and shared actions.
 
+- Read [bundlewhy ownership](docs/project-bundlewhy.md) for runtime, protocol, adapter and public-guide paths.
+- Documentation development uses `pnpm dev:public-docs` on fixed loopback port `46302`; conflicts fail.
+
 ## Canonical Directory Map
 
 - `docs/README.md`: Complete documentation catalog and project onboarding navigation.

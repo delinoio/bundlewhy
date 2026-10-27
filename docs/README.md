@@ -1,6 +1,6 @@
 # Documentation Catalog
 
-`docs/` is the source of truth for repository contracts. This base contains no runtime projects.
+`docs/` is the source of truth for repository contracts. The bundlewhy project owns the local analysis CLI, web UI, adapters and public guides.
 
 ## Repository contracts
 
@@ -17,7 +17,14 @@
 
 ## Project catalog
 
-No projects are registered. Before implementation, add `project-<id>.md`, at least one `<domain>-<project-or-component>-<contract>.md`, and their links here. Use lowercase kebab-case IDs and domain prefixes `apps`, `cmds`, `servers`, `crates`, `protos`, or `packages`.
+### bundlewhy
+
+- [project-bundlewhy](project-bundlewhy.md)
+- [crates-bundlewhy-foundation](crates-bundlewhy-foundation.md)
+- [apps-bundlewhy-web-contract](apps-bundlewhy-web-contract.md)
+- [packages-bundlewhy-distribution-contract](packages-bundlewhy-distribution-contract.md)
+- [protos-bundlewhy-v1-contract](protos-bundlewhy-v1-contract.md)
+- [Public guides](apps-bundlewhy-docs-foundation.md)
 
 ## Instruction update policy
 

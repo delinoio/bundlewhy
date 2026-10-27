@@ -1,23 +1,26 @@
-# Delino Base
+# bundlewhy
 
-Shared repository foundation for new Delino projects. No application or product projects are included.
+Explain why Vite or Rspack could not apply an optimization to a client production build. bundlewhy runs a local diagnostic build and serves a local web report. It never changes project source or configuration.
 
-The base retains development instructions, reusable agent skills, documentation templates, Apache-2.0 licensing, a pinned formatter, Git hooks and CI. Project implementations, project dependencies, installers, generated bindings, deployment configuration and release workflows are excluded.
+Version 0.1.0 is in development and is not yet published to npm.
 
-## Setup
+## Development
 
-Use Node.js 24 and pnpm 10.26.2.
+Use Node.js 24, pnpm 10.26.2 and the Rust toolchain in `rust-toolchain`.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm test
-pnpm format:check --all
+pnpm --filter bundlewhy-web build
+cargo build -p bundlewhy
+cargo run -p bundlewhy -- engines
 ```
 
-## Add a project
+Run `cargo test` for Rust, `pnpm test` for the UI, adapters, launcher and guides, and `pnpm test:tooling` for formatting fixtures. Run `pnpm --filter @delino/bundlewhy test:acceptance` for real Vite and Rspack analysis and HTML export. Remove generated `dist` directories after validation.
 
-Start with [the documentation catalog](docs/README.md) and [repository instructions](AGENTS.md). Create a project index and at least one domain contract before runtime implementation. Add language workspaces and build, test and release workflows when their first owning project is introduced.
+`pnpm proto:generate` regenerates Go and TypeScript bindings. `pnpm proto:lint` checks schemas. `pnpm dev:public-docs` serves the guides on fixed loopback port 46302; conflicts fail.
+
+Read the [project contract](docs/project-bundlewhy.md), [documentation catalog](docs/README.md) and [public guides](apps/public-docs/docs/bundlewhy/index.md). Public hosting and release publication are not configured by this transfer.
 
 ## License
 
-Repository-owned content is licensed under [Apache-2.0](LICENSE). Imported skills retain their original licenses and notices.
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).

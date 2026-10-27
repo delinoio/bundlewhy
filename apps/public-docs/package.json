@@ -1,0 +1,16 @@
+{
+  "name": "bundlewhy-docs",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/run-rspress-port.mjs bundlewhy-docs dev 46302 -",
+    "build": "rspress build",
+    "test": "pnpm build && node scripts/validate-bundlewhy.mjs && node --test scripts/bundlewhy-validation.test.mjs"
+  },
+  "devDependencies": {
+    "@rspress/core": "2.0.23",
+    "entities": "6.0.1"
+  }
+}

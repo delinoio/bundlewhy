@@ -4,6 +4,8 @@
 - This file covers `apps/` and its descendants unless a more specific instruction file applies.
 - Read the owning contracts below before changing behavior, including affected cross-domain consumers.
 
+- [Public guides](../docs/apps-bundlewhy-docs-foundation.md)
+
 ## Development and validation
 
 - Follow root `AGENTS.md` and project-specific docs before adding or changing app code.
@@ -17,3 +19,5 @@
 - [Repository defaults](../docs/repository-defaults.md)
 - [Repository workflow](../docs/repository-workflow-contract.md)
 - Register each new project and its domain contracts in [the documentation catalog](../docs/README.md) before implementation.
+
+- [bundlewhy ownership](../docs/apps-bundlewhy-web-contract.md)

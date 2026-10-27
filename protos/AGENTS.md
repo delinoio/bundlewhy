@@ -15,3 +15,5 @@
 - [Repository defaults](../docs/repository-defaults.md)
 - [Repository workflow](../docs/repository-workflow-contract.md)
 - Register each new project and its domain contracts in [the documentation catalog](../docs/README.md) before implementation.
+
+- [bundlewhy ownership](../docs/protos-bundlewhy-v1-contract.md)

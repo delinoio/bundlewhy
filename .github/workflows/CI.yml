@@ -68,12 +68,69 @@ jobs:
           TURBO_SCM_HEAD: ${{ steps.comparison.outputs.head }}
         run: pnpm format:check
       - name: Test formatting and hooks
+        run: pnpm test:tooling
+      - name: Select affected bundlewhy validation
+        id: bundlewhy
+        env:
+          BASE: ${{ steps.comparison.outputs.base }}
+          HEAD: ${{ steps.comparison.outputs.head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet "$BASE" "$HEAD" -- apps packages crates protos Cargo.toml Cargo.lock rust-toolchain .rustfmt.toml go.mod go.sum buf.yaml buf.gen.yaml package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json scripts .github/workflows/CI.yml; then
+            echo 'run=false' >> "$GITHUB_OUTPUT"
+          else
+            status="$?"
+            if [[ "$status" != 1 ]]; then exit "$status"; fi
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          fi
+      - uses: dtolnay/rust-toolchain@v1
+        if: steps.bundlewhy.outputs.run == 'true'
+        with:
+          toolchain: nightly-2026-09-28
+          components: rustfmt, clippy
+      - uses: actions/setup-go@v6
+        if: steps.bundlewhy.outputs.run == 'true'
+        with:
+          go-version-file: go.mod
+      - name: Check schemas and generated bindings
+        if: steps.bundlewhy.outputs.run == 'true'
+        env:
+          BASE: ${{ steps.comparison.outputs.base }}
+          GIT_LFS_SKIP_SMUDGE: "1"
+        run: |
+          pnpm proto:lint
+          if git cat-file -e "$BASE:buf.yaml" 2>/dev/null; then
+            pnpm exec buf breaking --against ".git#ref=$BASE"
+          else
+            echo "No schema baseline exists; this revision establishes v1."
+          fi
+          pnpm proto:generate
+          git diff --exit-code -- protos/gen apps/bundlewhy-web/src/gen
+          test -z "$(git ls-files --others --exclude-standard -- protos/gen apps/bundlewhy-web/src/gen)"
+          go test ./protos/gen/go/...
+      - name: Test the UI, adapters, launcher and guides
+        if: steps.bundlewhy.outputs.run == 'true'
         run: pnpm test
+      - name: Test the Rust core and CLI
+        if: steps.bundlewhy.outputs.run == 'true'
+        run: |
+          cargo fmt --all --check
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+      - name: Run fixture acceptance
+        if: steps.bundlewhy.outputs.run == 'true'
+        run: pnpm --filter @delino/bundlewhy test:acceptance
+      - name: Remove generated UI output
+        if: always()
+        run: rm -rf "apps/bundlewhy-web/dist"
       - name: Record validation result
         if: always()
         env:
           RESULT: ${{ job.status }}
         run: |
-          echo 'Commands: pnpm install --frozen-lockfile --ignore-scripts; pnpm format:check; pnpm test' >> "$GITHUB_STEP_SUMMARY"
-          echo "Result: $RESULT" >> "$GITHUB_STEP_SUMMARY"
-          echo 'Runtime, account, native platform and release acceptance: not applicable; no projects are included.' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo 'Commands: pnpm install --frozen-lockfile --ignore-scripts; pnpm format:check; pnpm test:tooling; affected schema, Go, Node, Rust and fixture checks'
+            echo "Result: $RESULT"
+            echo 'Fixture acceptance covers local Vite and Rspack builds. Cross-platform native, account, public hosting and release acceptance are not performed.'
+          } >> "$GITHUB_STEP_SUMMARY"
