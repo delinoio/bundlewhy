@@ -6,7 +6,7 @@
 
 ## Interfaces and content
 
-The sidebar includes overview, installation, getting started, supported engines, interpreting diagnostics, privacy and export, limitations, and troubleshooting. Preserve the frozen engine matrix, evidence qualifications, privacy boundaries and all known limits. Every guide states that version 0.1.0 is in development and is not yet available, and that the bootstrap version 0.0.0 contains no executable. Repository and issue links point to `delinoio/bundlewhy`. No repository-internal paths, credentials or release-availability claims belong in public content.
+The sidebar includes overview, installation, getting started, supported engines, interpreting diagnostics, privacy and export, limitations, and troubleshooting. Preserve the frozen engine matrix, evidence qualifications, privacy boundaries and all known limits. Every guide identifies version 0.1.0 as the published npm release and states that the bootstrap version 0.0.0 contains no executable. Installation examples select the executable release explicitly. Repository and issue links point to `delinoio/bundlewhy`. No repository-internal paths, credentials or unverified release-availability claims belong in public content.
 
 ## Development and validation
 

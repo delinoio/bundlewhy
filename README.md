@@ -2,7 +2,12 @@
 
 Explain why Vite or Rspack could not apply an optimization to a client production build. bundlewhy runs a local diagnostic build and serves a local web report. It never changes project source or configuration.
 
-Version 0.1.0 is in development and is not yet available. The bootstrap version 0.0.0 contains no executable.
+Version 0.1.0 is available on npm for macOS arm64, Linux x64 with glibc and Windows x64. The bootstrap version 0.0.0 contains no executable.
+
+```sh
+npx @delino/bundlewhy@0.1.0 --version
+npx @delino/bundlewhy@0.1.0 analyze --out-dir ./bundlewhy-runs
+```
 
 ## Development
 

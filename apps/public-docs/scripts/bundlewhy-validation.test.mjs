@@ -59,29 +59,29 @@ async function rejectsMutation(
   }
 }
 
-test("bundlewhy pages must keep the unreleased availability notice", async () => {
+test("bundlewhy pages must identify the published release", async () => {
   await rejectsMutation(
     projectValidator,
     (html) =>
       html.replaceAll(
-        "bundlewhy 0.1.0 is not yet available",
+        "bundlewhy 0.1.0 is available on npm",
         "bundlewhy release notes",
       ),
-    /bundlewhy\/.*missing its unreleased availability notice/u,
+    /bundlewhy\/.*missing its release or bootstrap notice/u,
     undefined,
     "bundlewhy/installation.html",
   );
 });
 
-test("bundlewhy pages cannot claim published availability", async () => {
+test("bundlewhy pages cannot describe the published release as unavailable", async () => {
   await rejectsMutation(
     projectValidator,
     (html) =>
       html.replace(
-        "Version 0.1.0 is in development.",
-        "Version 0.1.0 is in development. bundlewhy is available.",
+        "Version 0.0.0 contains no executable.",
+        "Version 0.0.0 contains no executable. Version 0.1.0 is in development.",
       ),
-    /bundlewhy\/.*claims published availability/u,
+    /bundlewhy\/.*claims the published release is unavailable/u,
     undefined,
     "bundlewhy/limitations.html",
   );

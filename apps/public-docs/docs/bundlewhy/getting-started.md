@@ -1,7 +1,7 @@
 # Getting started with bundlewhy
 
-:::warning Availability
-bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development. The examples use the `bundlewhy` command; see [installation](/bundlewhy/installation) for the planned entry point.
+:::info Availability
+bundlewhy 0.1.0 is available on npm. Version 0.0.0 contains no executable. The examples use the `bundlewhy` command; see [installation](/bundlewhy/installation) for the npm entry point.
 :::
 
 ## Analyze a project

@@ -8,8 +8,8 @@ export const bundlewhyHeadings = {
   "/bundlewhy/installation": [
     "Install bundlewhy",
     "Requirements",
-    "Planned platforms",
-    "Planned npm entry point",
+    "Supported platforms",
+    "Run through npm",
     "Update or roll back",
   ],
   "/bundlewhy/getting-started": [

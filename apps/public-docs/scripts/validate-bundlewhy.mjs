@@ -24,17 +24,17 @@ for (const [route, headings] of Object.entries(bundlewhyHeadings)) {
       .replace(/<[^>]*>/gu, " "),
   ).replace(/\s+/gu, " ");
   if (
-    !/\bbundlewhy 0\.1\.0 is not yet available\b/iu.test(visible) ||
-    !/\bVersion 0\.1\.0 is in development\b/iu.test(visible)
+    !/\bbundlewhy 0\.1\.0 is available on npm\b/iu.test(visible) ||
+    !/\bVersion 0\.0\.0 contains no executable\b/iu.test(visible)
   ) {
-    failures.push(`${route} is missing its unreleased availability notice`);
+    failures.push(`${route} is missing its release or bootstrap notice`);
   }
   if (
-    /(?<!\b(?:when|once|until|unless|if|after|before)\s+)\bbundlewhy(?: 0\.1\.0)? is (?:now )?(?:available|published)\b/iu.test(
+    /\bbundlewhy 0\.1\.0 is not yet available\b|\bVersion 0\.1\.0 is in development\b/iu.test(
       visible,
     )
   ) {
-    failures.push(`${route} claims published availability`);
+    failures.push(`${route} claims the published release is unavailable`);
   }
   for (const heading of headings) {
     if (!visible.includes(heading))
