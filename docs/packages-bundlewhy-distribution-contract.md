@@ -46,6 +46,8 @@ Adapters report progress and errors as JSON lines; Rust records them in the run 
 
 `pnpm --filter @delino/bundlewhy test` runs launcher and adapter tests, including the adapter unit tests that live next to the adapters (`crates/bundlewhy/adapters/*.test.mjs`). `pnpm --filter @delino/bundlewhy test:acceptance` builds the Rust binary, runs both fixtures end to end and verifies that fixture files are unchanged. Acceptance removes its generated web `dist` output after success or failure while preserving the original failure diagnostic. Fixtures pin `vite` `8.3.4` and `@rspack/core` `2.2.9` through this package's development dependencies.
 
+Acceptance records include saved engine problem codes. For the committed repository fixtures, they also include error messages with fixture and temporary directories replaced by placeholders. Custom `--project` runs omit messages because build errors can contain private source text. Affected PR, main-push and manual CI also validate Windows native tarball installation and both fixture builds before release.
+
 ## Dependencies and Integrations
 
 - [Rust foundation](crates-bundlewhy-foundation.md)

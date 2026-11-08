@@ -155,14 +155,53 @@ jobs:
             echo "Result: $RESULT"
             echo 'Fixture acceptance covers local Vite and Rspack builds. Cross-platform native, account, public hosting and release acceptance are not performed.'
           } >> "$GITHUB_STEP_SUMMARY"
+  windows-package:
+    needs: changes
+    if: needs.changes.outputs.bundlewhy == 'true'
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly-2026-09-28
+          targets: x86_64-pc-windows-msvc
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm exec turbo run build --filter=bundlewhy-web
+      - run: cargo build --locked --release --target x86_64-pc-windows-msvc -p bundlewhy
+      - run: pnpm release:package -- win32-x64-msvc
+      - name: Record native validation and clean generated output
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+          COMPARISON_BASE: ${{ needs.changes.outputs.base }}
+          COMPARISON_HEAD: ${{ needs.changes.outputs.head }}
+        run: |
+          {
+            echo "Revision: $(git rev-parse HEAD); comparison: $COMPARISON_BASE..$COMPARISON_HEAD"
+            echo "Windows package result: $RESULT"
+            echo 'Commands: cargo build --locked --release; pnpm release:package (tarball installation and Vite/Rspack analysis/export)'
+            echo 'npm publication, public registry installation and browser interaction are not performed.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -rf "apps/bundlewhy-web/dist" "packages/bundlewhy/dist"
   ci-result:
     if: always()
-    needs: [changes, quality]
+    needs: [changes, quality, windows-package]
     runs-on: ubuntu-latest
     steps:
       - name: Check validation results
         env:
           QUALITY_PLANNED: ${{ needs.changes.outputs.quality }}
+          WINDOWS_PLANNED: ${{ needs.changes.outputs.bundlewhy }}
           NEEDS_RESULTS: ${{ toJSON(needs) }}
           VALIDATION_REVISION: ${{ github.sha }}
         shell: bash
@@ -170,7 +209,7 @@ jobs:
           set -euo pipefail
           echo "Validation revision: $VALIDATION_REVISION" >> "$GITHUB_STEP_SUMMARY"
           echo "$NEEDS_RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"' | tee -a "$GITHUB_STEP_SUMMARY"
-          if echo "$NEEDS_RESULTS" | jq -e --arg planned "$QUALITY_PLANNED" 'all(.[]; .result == "success" or .result == "skipped") and .changes.result == "success" and (.quality.result == "success" or (.quality.result == "skipped" and $planned == "false"))' > /dev/null; then
+          if echo "$NEEDS_RESULTS" | jq -e --arg planned "$QUALITY_PLANNED" --arg windows "$WINDOWS_PLANNED" 'all(.[]; .result == "success" or .result == "skipped") and .changes.result == "success" and (.quality.result == "success" or (.quality.result == "skipped" and $planned == "false")) and (.["windows-package"].result == "success" or (.["windows-package"].result == "skipped" and $windows == "false"))' > /dev/null; then
             echo 'CI result: success' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             echo 'CI result: failure' | tee -a "$GITHUB_STEP_SUMMARY"
