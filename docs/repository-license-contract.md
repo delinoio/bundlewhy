@@ -10,4 +10,4 @@ Imported agent skills retain their upstream licenses, attribution and notices. A
 
 ## Distribution
 
-Future distributions must include the complete applicable license terms and notices. Validate package contents in the owning project's distribution checks. bundlewhy remains unpublished; the transfer does not configure release publication.
+Distributions must include the complete applicable license terms and notices. Validate package contents in the owning project's distribution checks. bundlewhy native packages include Rust and embedded UI dependency license texts; bootstrap packages contain no third-party runtime.

@@ -1,0 +1,126 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+concurrency:
+  group: bundlewhy-release
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Validate release tag and source
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node packages/bundlewhy/scripts/release.mjs check-tag "$RELEASE_TAG"
+          git merge-base --is-ancestor HEAD origin/main
+          echo "Source revision: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+  native:
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            platform: darwin-arm64
+            target: aarch64-apple-darwin
+          - runner: ubuntu-22.04
+            platform: linux-x64-gnu
+            target: x86_64-unknown-linux-gnu
+          - runner: windows-2022
+            platform: win32-x64-msvc
+            target: x86_64-pc-windows-msvc
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly-2026-09-28
+          targets: ${{ matrix.target }}
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm exec turbo run build --filter=bundlewhy-web
+      - name: Build native CLI with embedded UI
+        env:
+          RUST_TARGET: ${{ matrix.target }}
+        run: cargo build --locked --release --target "$RUST_TARGET" -p bundlewhy
+      - name: Package and test installed tarballs
+        env:
+          RELEASE_PLATFORM: ${{ matrix.platform }}
+        run: pnpm release:package -- "$RELEASE_PLATFORM"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            packages/bundlewhy/dist/release/*.tgz
+            packages/bundlewhy/dist/release/acceptance-*.json
+          if-no-files-found: error
+      - name: Record native validation and clean generated output
+        if: always()
+        env:
+          RELEASE_PLATFORM: ${{ matrix.platform }}
+          RESULT: ${{ job.status }}
+        run: |
+          {
+            echo "Revision: $(git rev-parse HEAD)"
+            echo "Platform: $RELEASE_PLATFORM; result: $RESULT"
+            echo 'Commands: cargo build --locked --release; pnpm release:package (tarball installation, CLI version, Vite and Rspack analysis/export)'
+            echo 'Public-registry installation and browser interaction were not tested by this job.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -rf "apps/bundlewhy-web/dist" "packages/bundlewhy/dist"
+  publish:
+    needs: [validate, native]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Use npm with trusted publishing support
+        run: npm install --global npm@11.19.0
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          pattern: release-*
+          path: ${{ runner.temp }}/release-artifacts
+      - name: Verify and collect platform artifacts
+        env:
+          ARTIFACTS: ${{ runner.temp }}/release-artifacts
+          TARBALLS: ${{ runner.temp }}/release-tarballs
+        run: node packages/bundlewhy/scripts/release.mjs collect
+      - name: Publish platform packages and launcher with OIDC
+        env:
+          TARBALLS: ${{ runner.temp }}/release-tarballs
+        run: npm run release:publish --prefix packages/bundlewhy -- "$TARBALLS"
+      - name: Record publication result
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          echo "Release revision: $(git rev-parse HEAD); publication result: $RESULT" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Publication verifies registry tarball integrity. It does not establish public installation acceptance on each platform.' >> "$GITHUB_STEP_SUMMARY"

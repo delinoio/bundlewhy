@@ -7,7 +7,10 @@
         "$TURBO_ROOT$/crates/bundlewhy/adapters/**",
         "$TURBO_ROOT$/.nvmrc",
         "$TURBO_ROOT$/package.json",
-        "$TURBO_ROOT$/pnpm-lock.yaml"
+        "$TURBO_ROOT$/pnpm-lock.yaml",
+        "$TURBO_ROOT$/LICENSE",
+        "$TURBO_ROOT$/NOTICE",
+        "$TURBO_ROOT$/crates/bundlewhy/Cargo.toml"
       ],
       "outputs": []
     }

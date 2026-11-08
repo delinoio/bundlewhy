@@ -1,7 +1,7 @@
 # Troubleshooting bundlewhy
 
 :::warning Availability
-bundlewhy is not yet published to npm. Version 0.1.0 is in development.
+bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development.
 :::
 
 Every error prints a stable `BW_*` code, a message and a recovery instruction. A failed or cancelled run never retries automatically; after you fix the cause, start a new run.

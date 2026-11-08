@@ -7,6 +7,7 @@ import { changedFormatFiles } from "./format-changed.mjs";
 
 const fixtureInputs = new Set([
   ".github/workflows/CI.yml",
+  ".github/workflows/release.yml",
   ".nvmrc",
   "package.json",
   "pnpm-lock.yaml",
@@ -41,6 +42,7 @@ export function plan(cwd, base, head) {
     "pnpm-workspace.yaml",
     "turbo.json",
     ".github/workflows/CI.yml",
+    ".github/workflows/release.yml",
   ]);
   const bundlewhy = paths.some(
     (path) =>

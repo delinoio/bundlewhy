@@ -1,7 +1,7 @@
 # Interpreting diagnostics
 
 :::warning Availability
-bundlewhy is not yet published to npm. Version 0.1.0 is in development. This page describes the prepared 0.1.0 rules.
+bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development. This page describes the prepared 0.1.0 rules.
 :::
 
 ## Evidence statuses

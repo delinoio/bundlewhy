@@ -6,3 +6,4 @@
 - Use the `changes` job outputs to select affected validation. Update the planner inputs when shared validation dependencies change, and include `changes` in `ci-result.needs`.
 - Manual validation uses the selected revision comparison. Do not add a full manual mode.
 - Add release workflows only with an owning project contract and explicit credential boundaries.
+- Release-only tag workflows may use macOS runners for native packaging. Keep these jobs separate from PR, main-push and affected manual validation. Follow the [distribution contract](../docs/packages-bundlewhy-distribution-contract.md#release-and-bootstrap); npm publication uses OIDC and must not require a stored npm token.

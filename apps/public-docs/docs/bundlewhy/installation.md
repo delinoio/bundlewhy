@@ -1,7 +1,7 @@
 # Install bundlewhy
 
 :::warning Availability
-bundlewhy is not yet published to npm. Version 0.1.0 is in development. The npm entry point below is planned and does not work until a release is published.
+bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development. The npm entry point below is planned and does not work until a release is published.
 :::
 
 ## Requirements
@@ -29,7 +29,7 @@ npx @delino/bundlewhy --version
 npx @delino/bundlewhy analyze --out-dir ./bundlewhy-runs
 ```
 
-This package is not yet published. Until it is, the command fails because npm cannot find the package.
+Version 0.0.0 only reserves the package names and contains no executable. The commands above will work after version 0.1.0 is published.
 
 ## Build from source
 

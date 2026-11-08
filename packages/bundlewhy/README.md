@@ -2,7 +2,7 @@
 
 bundlewhy explains why your bundler or its default JavaScript minifier could not apply an optimization to a client production build. It runs one diagnostic build of a trusted local Vite or Rspack project and opens a local web UI. Each diagnostic shows the optimization rule, the condition outcomes, the relevant code, the supporting evidence, the dependency path and a corrective direction with safety conditions. bundlewhy never changes your source code, configuration or lockfiles.
 
-> Status: 0.1.0 is in development and is not published to npm yet.
+> Status: 0.1.0 is in development and is not yet available. The bootstrap version 0.0.0 contains no executable.
 
 ## Usage
 
