@@ -8,7 +8,10 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { normalizeCollectionRoot } from "../../../crates/bundlewhy/adapters/vite.mjs";
+import {
+  normalizeCollectionRoot,
+  normalizeVitePath,
+} from "../../../crates/bundlewhy/adapters/vite.mjs";
 
 const packageRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -22,6 +25,32 @@ const vitePackagePath = createRequire(
   path.join(packageRoot, "package.json"),
 ).resolve("vite/package.json");
 const viteCli = path.join(path.dirname(vitePackagePath), "bin/vite.js");
+
+test("Vite paths unwrap Windows drive and UNC namespaces only on Windows", () => {
+  const cases = [
+    [
+      String.raw`\\?\D:\project\vite.config.js`,
+      String.raw`D:\project\vite.config.js`,
+    ],
+    [
+      String.raw`\\?\c:\project with spaces\web`,
+      String.raw`c:\project with spaces\web`,
+    ],
+    [String.raw`\\?\UNC\server\share\web`, String.raw`\\server\share\web`],
+    [String.raw`\\?\UNC\server\share`, String.raw`\\server\share`],
+    [String.raw`D:\project\web`, String.raw`D:\project\web`],
+    [String.raw`\\server\share\web`, String.raw`\\server\share\web`],
+    [String.raw`\\.\pipe\vite`, String.raw`\\.\pipe\vite`],
+    [String.raw`\\?\Volume{example}\web`, String.raw`\\?\Volume{example}\web`],
+    ["/project/web", "/project/web"],
+    ["web", "web"],
+  ];
+  for (const [input, expected] of cases) {
+    assert.equal(normalizeVitePath(input, "win32"), expected);
+    assert.equal(normalizeVitePath(input, "darwin"), input);
+    assert.equal(normalizeVitePath(input, "linux"), input);
+  }
+});
 
 test("collection roots use Vite's separator format in every resolution mode", () => {
   const lexicalRoot = "C:\\project\\web";

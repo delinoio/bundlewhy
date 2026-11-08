@@ -92,13 +92,28 @@ export function normalizeViteModule(namespace) {
 export function normalizeCollectionRoot(root, preserveSymlinks = false) {
   // Vite normalizes root separators before configResolved, including when it
   // preserves symlinks or cannot resolve a lexical path yet.
-  if (preserveSymlinks) return root.replaceAll("\\", "/");
+  if (preserveSymlinks) return normalizeVitePath(root).replaceAll("\\", "/");
   // Vite keeps the resolved lexical root when realpath cannot access it yet.
   try {
-    return fs.realpathSync(root).replaceAll("\\", "/");
+    return normalizeVitePath(fs.realpathSync(root)).replaceAll("\\", "/");
   } catch {
-    return root.replaceAll("\\", "/");
+    return normalizeVitePath(root).replaceAll("\\", "/");
   }
+}
+
+/** Convert Rust's canonical Windows filesystem paths for Vite/Rolldown. */
+export function normalizeVitePath(value, platform = process.platform) {
+  // Vite 8 turns the namespace prefix into //?/, which Rolldown cannot resolve.
+  // Keep this boundary conversion until the supported engine accepts those
+  // paths. Only drive and UNC filesystem paths have an ordinary equivalent;
+  // leave device namespaces and paths on other operating systems unchanged.
+  if (platform !== "win32" || !value.startsWith("\\\\?\\")) return value;
+  const rest = value.slice(4);
+  if (/^[a-z]:\\/i.test(rest)) return rest;
+  if (/^UNC\\[^\\]+\\[^\\]+(?:\\|$)/i.test(rest)) {
+    return `\\\\${rest.slice(4)}`;
+  }
+  return value;
 }
 
 /** Effective name-mangling state written to the collection (`mangle`). */
@@ -632,6 +647,14 @@ function collectorPlugin(state) {
 }
 
 await runAdapter(async (request) => {
+  request = {
+    ...request,
+    projectRoot: normalizeVitePath(request.projectRoot),
+    configFile: request.configFile
+      ? normalizeVitePath(request.configFile)
+      : request.configFile,
+    buildDir: normalizeVitePath(request.buildDir),
+  };
   progress("detecting", "Loading the project's Vite installation");
   const vitePackage = resolveProjectPackage(request.projectRoot, "vite");
   checkEngineVersion(request, "vite", vitePackage.version);
@@ -718,7 +741,9 @@ await runAdapter(async (request) => {
   // Capture the configured root after loading the user's configuration. This
   // adds external roots to the protection set before the build starts.
   const configuredRoot =
-    typeof userConfig.root === "string" ? userConfig.root : request.projectRoot;
+    typeof userConfig.root === "string"
+      ? normalizeVitePath(userConfig.root)
+      : request.projectRoot;
   const root = path.isAbsolute(configuredRoot)
     ? configuredRoot
     : path.resolve(request.projectRoot, configuredRoot);
