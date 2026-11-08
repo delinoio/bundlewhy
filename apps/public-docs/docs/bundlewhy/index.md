@@ -2,8 +2,8 @@
 
 bundlewhy explains why Vite or Rspack, and their default JavaScript minifier, could not apply an optimization to a client production build. You run a local command-line tool that performs one diagnostic build of your project, then explore the results in a local web UI in your browser.
 
-:::warning Availability
-bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development, and the commands on these pages describe the prepared 0.1.0 behavior. See [installation](/bundlewhy/installation) for the planned entry point and platforms.
+:::info Availability
+bundlewhy 0.1.0 is available on npm. Version 0.0.0 contains no executable. These pages describe version 0.1.0. See [installation](/bundlewhy/installation) for the npm entry point and supported platforms.
 :::
 
 ## What each diagnostic shows

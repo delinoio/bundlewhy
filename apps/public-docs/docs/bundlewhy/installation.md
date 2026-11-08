@@ -1,7 +1,7 @@
 # Install bundlewhy
 
-:::warning Availability
-bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Version 0.1.0 is in development. The npm entry point below is planned and does not work until a release is published.
+:::info Availability
+bundlewhy 0.1.0 is available on npm. Version 0.0.0 contains no executable. Use version 0.1.0 or newer for the CLI.
 :::
 
 ## Requirements
@@ -10,7 +10,7 @@ bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Vers
 - A local Vite or Rspack project at a version listed on the [supported engines](/bundlewhy/supported-engines) page, with its dependencies installed.
 - A desktop browser for the local web UI.
 
-## Planned platforms
+## Supported platforms
 
 | Platform      | Architecture |
 | ------------- | ------------ |
@@ -18,18 +18,18 @@ bundlewhy 0.1.0 is not yet available. Version 0.0.0 contains no executable. Vers
 | Linux (glibc) | x64          |
 | Windows       | x64          |
 
-Other platforms are not planned for 0.1.0. On an unsupported platform, or when the platform package is missing, the launcher reports an error with reinstall guidance. It does not download or compile a fallback.
+Other platforms are not supported in 0.1.0. On an unsupported platform, or when the platform package is missing, the launcher reports an error with reinstall guidance. It does not download or compile a fallback.
 
-## Planned npm entry point
+## Run through npm
 
-When bundlewhy is published, you will run it through npm without a global install:
+Run bundlewhy through npm without a global install:
 
 ```sh
-npx @delino/bundlewhy --version
-npx @delino/bundlewhy analyze --out-dir ./bundlewhy-runs
+npx @delino/bundlewhy@0.1.0 --version
+npx @delino/bundlewhy@0.1.0 analyze --out-dir ./bundlewhy-runs
 ```
 
-Version 0.0.0 only reserves the package names and contains no executable. The commands above will work after version 0.1.0 is published.
+Version 0.0.0 only reserves the package names and contains no executable. Use the commands above to select the first executable release.
 
 ## Build from source
 
