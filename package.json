@@ -15,7 +15,8 @@
     "proto:lint": "buf lint && buf format --diff --exit-code",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "release:package": "turbo run release:package"
   },
   "devDependencies": {
     "lefthook": "2.2.2",

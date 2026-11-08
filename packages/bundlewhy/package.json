@@ -13,7 +13,9 @@
   },
   "scripts": {
     "test": "node --test test/*.test.mjs scripts/*.test.mjs ../../crates/bundlewhy/adapters/*.test.mjs",
-    "test:acceptance": "node scripts/acceptance.mjs"
+    "test:acceptance": "node scripts/acceptance.mjs",
+    "release:package": "node scripts/release.mjs package",
+    "release:publish": "node scripts/release.mjs publish"
   },
   "devDependencies": {
     "@rspack/core": "2.2.9",

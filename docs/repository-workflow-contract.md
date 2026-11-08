@@ -2,7 +2,7 @@
 
 ## Scope
 
-This repository owns bundlewhy. See [project ownership](project-bundlewhy.md) and [the public-guide contract](apps-bundlewhy-docs-foundation.md). The transferred runtime, adapters, UI, fixtures, schemas and generated bindings retain their directory layout. Public hosting and release publication are not configured.
+This repository owns bundlewhy. See [project ownership](project-bundlewhy.md) and [the public-guide contract](apps-bundlewhy-docs-foundation.md). The transferred runtime, adapters, UI, fixtures, schemas and generated bindings retain their directory layout. Public hosting is not configured. Tag releases use the [distribution contract](packages-bundlewhy-distribution-contract.md#release-and-bootstrap).
 
 ## Installation
 

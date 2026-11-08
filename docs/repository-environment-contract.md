@@ -4,6 +4,8 @@
 
 The base has no application services, environment selectors, secret provider integration or production credentials. New services must define their configuration schema, validation, local defaults and credential boundaries in their domain contracts.
 
+bundlewhy npm releases authenticate with GitHub Actions OIDC in the release publish job. No npm token is stored in GitHub secrets. One-time bootstrap and trusted publisher configuration use local npm account authentication and 2FA; these credentials are not build inputs and must never enter staged packages or logs.
+
 ## Local state
 
 Never commit `.infisical.json`, `.dev-environment/`, real `.env` files or user, production, release and signing credentials. Service-local `.env.example` files may contain names, validation guidance, placeholders and safe loopback defaults only. Do not add a root environment example.

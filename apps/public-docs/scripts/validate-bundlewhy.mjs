@@ -24,10 +24,10 @@ for (const [route, headings] of Object.entries(bundlewhyHeadings)) {
       .replace(/<[^>]*>/gu, " "),
   ).replace(/\s+/gu, " ");
   if (
-    !/\bbundlewhy is not yet published to npm\b/iu.test(visible) ||
+    !/\bbundlewhy 0\.1\.0 is not yet available\b/iu.test(visible) ||
     !/\bVersion 0\.1\.0 is in development\b/iu.test(visible)
   ) {
-    failures.push(`${route} is missing its unpublished availability notice`);
+    failures.push(`${route} is missing its unreleased availability notice`);
   }
   if (
     /(?<!\b(?:when|once|until|unless|if|after|before)\s+)\bbundlewhy(?: 0\.1\.0)? is (?:now )?(?:available|published)\b/iu.test(

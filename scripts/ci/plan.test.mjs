@@ -67,6 +67,7 @@ test("documentation changes select formatting without fixtures", (t) => {
 test("every shared fixture input selects tests", async (t) => {
   for (const path of [
     ".github/workflows/CI.yml",
+    ".github/workflows/release.yml",
     ".nvmrc",
     "package.json",
     "pnpm-lock.yaml",

@@ -59,15 +59,15 @@ async function rejectsMutation(
   }
 }
 
-test("bundlewhy pages must keep the unpublished availability notice", async () => {
+test("bundlewhy pages must keep the unreleased availability notice", async () => {
   await rejectsMutation(
     projectValidator,
     (html) =>
       html.replaceAll(
-        "bundlewhy is not yet published to npm",
+        "bundlewhy 0.1.0 is not yet available",
         "bundlewhy release notes",
       ),
-    /bundlewhy\/.*missing its unpublished availability notice/u,
+    /bundlewhy\/.*missing its unreleased availability notice/u,
     undefined,
     "bundlewhy/installation.html",
   );

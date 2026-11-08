@@ -15,3 +15,4 @@
 - Register each new project and its domain contracts in [the documentation catalog](../docs/README.md) before implementation.
 
 - [bundlewhy ownership](../docs/packages-bundlewhy-distribution-contract.md)
+- Generate bundlewhy release packages through its release script. Keep the development manifest private, publish only staged tarballs, and follow the owning contract for local bootstrap and trusted publishing.
