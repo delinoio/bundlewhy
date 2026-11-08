@@ -71,6 +71,7 @@ if (args.includes("analyze")) {
       : JSON.stringify({ analysis: {
           status: mode === "analysis-fail" ? "RUN_STATUS_FAILED" : "RUN_STATUS_COMPLETE",
           diagnostics: [],
+          problems: [{ code: "BW_BUILD_FAILED", message: "private build text" }],
         } });
     fs.writeFileSync(path.join(runDir, "analysis.json"), result);
   }
@@ -117,6 +118,10 @@ test("cleans generated web output after successful acceptance", () => {
   const result = runCase("success");
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(JSON.parse(result.stdout).records[0].problems, []);
+  assert.deepEqual(JSON.parse(result.stdout).records[0].engineProblems, [
+    { code: "BW_BUILD_FAILED" },
+  ]);
+  assert.doesNotMatch(result.stdout, /private build text/);
 });
 
 for (const [mode, diagnostic] of [

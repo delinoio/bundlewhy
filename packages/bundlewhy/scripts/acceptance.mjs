@@ -202,6 +202,18 @@ try {
       peakMemoryBytes: peakBytes,
       diagnostics: analysis?.diagnostics.length ?? null,
       status: analysis?.status ?? null,
+      // Repository fixture failures need their saved cause for CI diagnosis.
+      // Custom projects can contain private build text, so expose codes only.
+      engineProblems: (analysis?.problems ?? []).map((problem) => ({
+        code: problem.code,
+        ...(!option("--project")
+          ? {
+              message: String(problem.message ?? "")
+                .replaceAll(target.project, "<fixture>")
+                .replaceAll(outDir, "<run>"),
+            }
+          : {}),
+      })),
       problems,
     });
     failed ||= problems.length > 0;
